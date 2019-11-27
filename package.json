@@ -1,0 +1,28 @@
+{
+  "name": "trackmytvshows",
+  "version": "1.0.0",
+  "description": "todo: description",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flrnd/trackmytvshows.git"
+  },
+  "keywords": [
+    "node",
+    "api",
+    "express"
+  ],
+  "author": "Florian Rand <florian.rand@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flrnd/trackmytvshows/issues"
+  },
+  "homepage": "https://github.com/flrnd/trackmytvshows#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
