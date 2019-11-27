@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import bluebird from "bluebird";
@@ -23,7 +23,6 @@ mongoose
     // process.exit();
   });
 
-app.set("port", process.env.PORT || 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
