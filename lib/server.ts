@@ -1,4 +1,5 @@
-import app from './app';
+import errorHandler from "errorhandler";
+import app from "./app";
 
 const PORT = process.env.PORT;
 
