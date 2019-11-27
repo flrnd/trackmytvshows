@@ -1,8 +1,8 @@
-import express from 'express';
+import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 
 class App {
-  public app: express.Application;
+  public app: Application;
 
   constructor() {
     this.app = express();
