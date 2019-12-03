@@ -30,4 +30,10 @@ export default class Database {
         return process.exit(1);
       });
   }
+
+  public dropDatabase() {
+    mongoose.connection.db.dropDatabase(() => {
+      console.log("Database drop");
+    });
+  }
 }
