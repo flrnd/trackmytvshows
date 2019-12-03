@@ -18,6 +18,6 @@ export const unauthorizedErrorHandler = (
 ) => {
   if (error.name === "UnauthorizedError") {
     console.error(`ERROR: ${error}`);
-    response.status(500).send({ message: `${error}` });
+    response.status(401).send({ message: `${error}` });
   }
 };
