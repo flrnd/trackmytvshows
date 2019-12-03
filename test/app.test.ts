@@ -6,8 +6,6 @@ import mongoose, { mongo } from "mongoose";
 dotenv.config();
 
 const databaseURL = `mongodb://127.0.0.1/tvshow_testdb`;
-const authUrl = "https://dev-0fmeh6qq-flrn.eu.auth0.com";
-let token: { type: string };
 
 beforeAll(async () => {
   await mongoose.connect(databaseURL, {
@@ -33,35 +31,39 @@ describe("GET /api/", () => {
   });
 });
 
-describe("GET /api/tvshow/", () => {
+describe("POST /api/tvshow", () => {
   it("should return 401 Unauthorized", done => {
     request(app)
       .get("/api/tvshow/")
       .expect(401, done);
   });
-});
 
-describe("POST /api/tvshow", () => {
-  it("should return 401 Unauthorized", done => {
+  it("should return 200", done => {
+    const token = process.env.ACCESS_TOKEN;
     request(app)
       .post("/api/tvshow/")
+      .set("Authorization", "Bearer " + token)
       .expect(401, done);
   });
 });
 
-//describe("POST /api/tvshow bad Request", () => {
-//  it("should return 500 Error", done => {
-//    jest.setTimeout(30000);
-//    const badRequest = { some: "Value" };
-//    const token = process.env.ACCESS_TOKEN;
-//    request(app)
-//      .post("/api/tvshow/")
-//      .set("Authorization", `Bearer ${token}`)
-//      .expect(500, done);
-//  });
-//});
+describe("GET /api/tvshow", () => {
+  it("should return 401 Unauthorized", done => {
+    request(app)
+      .get("/api/tvshow/")
+      .expect(401, done);
+  });
 
-afterAll(async () => {
+  it("should return 200", () => {
+    const token = process.env.ACCESS_TOKEN;
+    request(app)
+      .get("/api/tvshow/")
+      .set("Authorization", "Bearer " + token)
+      .expect(200);
+  });
+});
+
+afterAll(() => {
   mongoose.connection.dropDatabase();
   mongoose.connection.close();
 });
