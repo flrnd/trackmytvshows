@@ -4,6 +4,7 @@ import jwt from "express-jwt";
 import jwksRsa from "jwks-rsa";
 
 import * as tvshowController from "./controllers/show";
+import * as helloController from "./controllers/hello";
 
 const app = express();
 
@@ -24,17 +25,9 @@ const checkJwt = jwt({
 });
 
 // routes
-app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Hello from Track my TV Shows!",
-  });
-});
-
-app.put("/", (req, res) => {
-  res.status(200).json({ message: `Hello ${req.body.name}` });
-});
-
+app.get("/", helloController.getHello);
+app.put("/", helloController.putHello);
 app.get("/api/tvshow/", checkJwt, tvshowController.getShow);
-app.post("/api/tvshow/", checkJwt, tvshowController.postShow);
+app.put("/api/tvshow/", checkJwt, tvshowController.postShow);
 
 export default app;
