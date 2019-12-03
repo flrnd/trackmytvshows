@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { checkJwt } from "./auth/checkJwt";
+import { errorHandler } from "./auth/error";
 
 import * as tvshowController from "./controllers/show";
 import * as helloController from "./controllers/hello";
@@ -15,5 +16,7 @@ app.get("/", helloController.getHello);
 app.put("/", helloController.putHello);
 app.get("/api/tvshow/", checkJwt, tvshowController.getShow);
 app.put("/api/tvshow/", checkJwt, tvshowController.postShow);
+
+app.use(errorHandler);
 
 export default app;
