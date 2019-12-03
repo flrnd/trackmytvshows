@@ -10,7 +10,7 @@ class HttpException extends Error {
   }
 }
 
-export const errorHandler = (
+export const unauthorizedErrorHandler = (
   error: HttpException,
   request: Request,
   response: Response,
