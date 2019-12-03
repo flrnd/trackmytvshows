@@ -1,13 +1,20 @@
 import request from "supertest";
+import dotenv from "dotenv";
 import app from "../lib/app";
-import Database from "../lib/config/database";
+import mongoose, { mongo } from "mongoose";
 
-const databaseURL = `mongodb://127.0.0.1/test`;
-const database = new Database(databaseURL);
+dotenv.config();
+
+const databaseURL = `mongodb://127.0.0.1/tvshow_testdb`;
+const authUrl = "https://dev-0fmeh6qq-flrn.eu.auth0.com";
 let token: { type: string };
 
-beforeAll(() => {
-  database.connect();
+beforeAll(async () => {
+  await mongoose.connect(databaseURL, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+  });
 });
 
 describe("GET /", () => {
@@ -34,19 +41,27 @@ describe("GET /api/tvshow/", () => {
   });
 });
 
-describe("Controllers", () => {
-  describe("showController", () => {
-    beforeAll(done => {
-      database.dropDatabase();
-      return done();
-    });
-  });
-
-  it("should return 500 Error", done => {
-    const badRequest = { value: "Some value" };
+describe("POST /api/tvshow", () => {
+  it("should return 401 Unauthorized", done => {
     request(app)
       .post("/api/tvshow/")
-      .send(badRequest)
-      .expect(500, done);
+      .expect(401, done);
   });
+});
+
+//describe("POST /api/tvshow bad Request", () => {
+//  it("should return 500 Error", done => {
+//    jest.setTimeout(30000);
+//    const badRequest = { some: "Value" };
+//    const token = process.env.ACCESS_TOKEN;
+//    request(app)
+//      .post("/api/tvshow/")
+//      .set("Authorization", `Bearer ${token}`)
+//      .expect(500, done);
+//  });
+//});
+
+afterAll(async () => {
+  mongoose.connection.dropDatabase();
+  mongoose.connection.close();
 });
