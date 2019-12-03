@@ -13,9 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
 app.get("/", helloController.getHello);
-app.put("/", helloController.putHello);
+app.post("/", helloController.putHello);
 app.get("/api/tvshow/", checkJwt, tvshowController.getAllShows);
-app.put("/api/tvshow/", checkJwt, tvshowController.postShow);
+app.post("/api/tvshow/", checkJwt, tvshowController.postShow);
 
 app.use(unauthorizedErrorHandler);
 
