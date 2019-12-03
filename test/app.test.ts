@@ -9,10 +9,10 @@ describe("GET /", () => {
   });
 });
 
-describe("GET /api/", () => {
+describe("GET /api/tvshow/", () => {
   it("should return 401 Unauthorized", done => {
     request(app)
-      .get("/api/")
+      .get("/api/tvshow/")
       .expect(401, done);
   });
 });
