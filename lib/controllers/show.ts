@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Show, ShowDocument } from "../models/Show";
-import e = require("express");
 
 export const getShow = (req: Request, res: Response) => {
   res.status(200).send({ message: "GET show success!" });
