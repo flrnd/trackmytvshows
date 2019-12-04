@@ -7,7 +7,7 @@ export const getShow = (req: Request, res: Response) => {
 
 export const getAllShows = (req: Request, res: Response) => {
   Show.find({})
-    .then(shows => res.status(200).send({ message: `TV Shows: ${shows}` }))
+    .then(shows => res.status(200).send({ tvshows: shows }))
     .catch(error => res.status(500).send({ error: error.message }));
 };
 
