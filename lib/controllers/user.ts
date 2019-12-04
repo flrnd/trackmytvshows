@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { check, sanitize, validationResult } from "express-validator";
 import { User } from "../models/User";
 
-const secret = { secret: process.env.JWT_SECRET || "Some example secret" };
+const jwtSecret = process.env.JWT_SECRET;
 
 export const postLogin = async (
   req: Request,
@@ -45,7 +45,7 @@ export const postLogin = async (
     if (!match) {
       return res.status(401).send({ auth: false, token: null });
     }
-    const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: existingUser._id }, jwtSecret, {
       expiresIn: 86400,
     });
     res.status(200).send({ auth: true, token });
