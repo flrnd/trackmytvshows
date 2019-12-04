@@ -17,7 +17,7 @@ export const postShow = (req: Request, res: Response) => {
   newShow
     .save()
     .then(response => {
-      console.log(response);
+      console.log(`New show added: ${response}`);
       res.status(200).send({ message: response });
     })
     .catch(error => {
