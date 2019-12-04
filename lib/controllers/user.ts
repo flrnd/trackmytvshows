@@ -1,4 +1,4 @@
-import jwt from "express-jwt";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import { Request, Response, NextFunction } from "express";
@@ -38,11 +38,17 @@ export const postLogin = async (
     if (!existingUser) {
       return res.status(401).send({ message: "Wrong email." });
     }
-    validateUserPassword(user.password, existingUser.password).then(match => {
-      match
-        ? res.status(200).send({ message: `password match: ${match}` })
-        : res.status(401).send({ message: "Wrong password." });
+    const match = await validateUserPassword(
+      user.password,
+      existingUser.password,
+    );
+    if (!match) {
+      return res.status(401).send({ auth: false, token: null });
+    }
+    const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, {
+      expiresIn: 86400,
     });
+    res.status(200).send({ auth: true, token });
   } catch (error) {
     console.error(error.message);
   }
