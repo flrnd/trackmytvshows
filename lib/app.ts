@@ -1,34 +1,25 @@
 import express from "express";
 import bodyParser from "body-parser";
-import jwt from "express-jwt";
-import jwksRsa from "jwks-rsa";
+import { unauthorizedErrorHandler } from "./auth/error";
+import { verifyToken } from "./auth/verifyToken";
+
+import * as tvshowController from "./controllers/show";
+import * as helloController from "./controllers/hello";
+import * as userController from "./controllers/user";
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Auth
-const checkJwt = jwt({
-  secret: jwksRsa.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: process.env.AUTH0_JWKS_URI,
-  }),
-  audience: process.env.AUTH0_AUDIENCE,
-  issuer: process.env.AUTH0_ISSUER,
-  algorithms: ["RS256"],
-});
-
 // routes
-app.get("/", (req, res) => {
-  res.json({
-    message: "Hello from Track my TV Shows!",
-  });
-});
+app.get("/", helloController.getHello);
+app.post("/", helloController.putHello);
+app.post("/api/signup/", userController.postSignup);
+app.post("/api/login/", userController.postLogin);
+app.get("/api/tvshow/", verifyToken, tvshowController.getAllShows);
+app.post("/api/tvshow/", verifyToken, tvshowController.postShow);
 
-app.get("/api/", checkJwt, (req, res) => {
-  res.json({ message: "Hello from private endpoint!" });
-});
+app.use(unauthorizedErrorHandler);
+
 export default app;
