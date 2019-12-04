@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { checkJwt } from "./auth/checkJwt";
 import { unauthorizedErrorHandler } from "./auth/error";
+import { verifyToken } from "./auth/verifyToken";
 
 import * as tvshowController from "./controllers/show";
 import * as helloController from "./controllers/hello";
@@ -17,8 +17,8 @@ app.get("/", helloController.getHello);
 app.post("/", helloController.putHello);
 app.post("/api/signup/", userController.postSignup);
 app.post("/api/login/", userController.postLogin);
-app.get("/api/tvshow/", checkJwt, tvshowController.getAllShows);
-app.post("/api/tvshow/", checkJwt, tvshowController.postShow);
+app.get("/api/tvshow/", verifyToken, tvshowController.getAllShows);
+app.post("/api/tvshow/", verifyToken, tvshowController.postShow);
 
 app.use(unauthorizedErrorHandler);
 
