@@ -1,8 +1,10 @@
 import async, { nextTick } from "async";
 import jwt from "express-jwt";
+import bcrypt from "bcrypt";
+
 import { Request, Response, NextFunction } from "express";
 import { check, sanitize, validationResult } from "express-validator";
-import { User } from "../models/User";
+import { User, UserDocument } from "../models/User";
 
 const secret = { secret: process.env.JWT_SECRET || "Some example secret" };
 
@@ -32,13 +34,23 @@ export const postLogin = async (
     password: req.body.password,
   });
 
-  User.findOne({ email: user.email }, (err, existingUser) => {
+  User.findOne({ email: user.email.toLowerCase() }, (err, existingUser) => {
     if (err) {
       return next(err);
     }
-    existingUser
-      ? res.status(200).send({ message: `Hello ${user.email}` })
-      : res.status(401).send({ message: "Unauthorized login" });
+    if (!existingUser) {
+      return res.status(500).send({ message: "wrong email or password." });
+    }
+    bcrypt.compare(user.password, existingUser.password, (err, isMatch) => {
+      if (err) {
+        return next(err);
+      }
+      isMatch
+        ? res.status(200).send({ message: "logged in! token: 12345" })
+        : res
+            .status(401)
+            .send({ message: "Unauthorized login. Wrong password." });
+    });
   });
 };
 

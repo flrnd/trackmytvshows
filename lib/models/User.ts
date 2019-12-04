@@ -1,18 +1,15 @@
-import bcrypt from "bcrypt-nodejs";
+import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 
 export type UserDocument = mongoose.Document & {
   email: string;
   password: string;
-  passwordResetToken: string;
-  passwordResetExpires: Date;
-
   comparePassword: comparePasswordFunction;
 };
 
 type comparePasswordFunction = (
   candidatePassword: string,
-  cb: (err: any, isMatch: any) => {},
+  cb: (err: any, isMatch: any) => any,
 ) => void;
 
 export interface AuthToken {
@@ -24,8 +21,6 @@ const userSchema = new mongoose.Schema(
   {
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
-    passwordResetToken: String,
-    passwordResetExpires: Date,
   },
   { timestamps: true },
 );
@@ -39,7 +34,7 @@ userSchema.pre("save", function save(next) {
     if (err) {
       return next(err);
     }
-    bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {
+    bcrypt.hash(user.password, salt, (err: mongoose.Error, hash) => {
       if (err) {
         return next(err);
       }
