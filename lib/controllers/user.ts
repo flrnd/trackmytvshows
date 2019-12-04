@@ -1,10 +1,9 @@
-import async, { nextTick } from "async";
 import jwt from "express-jwt";
 import bcrypt from "bcrypt";
 
 import { Request, Response, NextFunction } from "express";
 import { check, sanitize, validationResult } from "express-validator";
-import { User, UserDocument } from "../models/User";
+import { User } from "../models/User";
 
 const secret = { secret: process.env.JWT_SECRET || "Some example secret" };
 
@@ -34,24 +33,19 @@ export const postLogin = async (
     password: req.body.password,
   });
 
-  User.findOne({ email: user.email.toLowerCase() }, (err, existingUser) => {
-    if (err) {
-      return next(err);
-    }
+  try {
+    const existingUser = await checkUser(user.email);
     if (!existingUser) {
-      return res.status(500).send({ message: "wrong email or password." });
+      return res.status(401).send({ message: "Wrong email." });
     }
-    bcrypt.compare(user.password, existingUser.password, (err, isMatch) => {
-      if (err) {
-        return next(err);
-      }
-      isMatch
-        ? res.status(200).send({ message: "logged in! token: 12345" })
-        : res
-            .status(401)
-            .send({ message: "Unauthorized login. Wrong password." });
+    validateUserPassword(user.password, existingUser.password).then(match => {
+      match
+        ? res.status(200).send({ message: `password match: ${match}` })
+        : res.status(401).send({ message: "Wrong password." });
     });
-  });
+  } catch (error) {
+    console.error(error.message);
+  }
 };
 
 export const postSignup = async (
@@ -80,20 +74,26 @@ export const postSignup = async (
     password: req.body.password,
   });
 
-  User.findOne({ email: user.email }, (err, existingUser) => {
-    if (err) {
-      return next(err);
-    }
+  try {
+    const existingUser = await checkUser(user.email);
     if (existingUser) {
-      return res.status(500).send({ message: "User already exists." });
+      res.status(500).send({ message: `${user.email} already in use.` });
     }
-    user.save(err => {
-      if (err) {
-        return next(err);
-      }
-    });
-    res
-      .status(200)
-      .send({ message: `Welcome to track my tvshow ${user.email}!` });
-  });
+    const newUser = await user.save();
+    res.status(200).send({ message: `Signed in with ${newUser.email}!` });
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+const validateUserPassword = async (password: string, hash: string) => {
+  const match = await bcrypt.compare(password, hash);
+  return match;
+};
+
+const checkUser = async (email: string) => {
+  const user = await User.findOne({
+    email: email.toLowerCase(),
+  }).exec();
+  return user;
 };
