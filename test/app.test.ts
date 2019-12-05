@@ -5,14 +5,18 @@ import mongoose from "mongoose";
 
 dotenv.config();
 
-const databaseURL = `mongodb://127.0.0.1/tvshow_testdb`;
-
 beforeAll(async () => {
+  const databaseURL = `mongodb://127.0.0.1/tvshow_testdb`;
   await mongoose.connect(databaseURL, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
   });
+});
+
+afterAll(async () => {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
 });
 
 describe("GET /", () => {
@@ -142,9 +146,4 @@ describe("GET /api/tvshow/", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(200, done);
   });
-});
-
-afterAll(async () => {
-  mongoose.connection.dropDatabase();
-  mongoose.connection.close();
 });
