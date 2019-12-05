@@ -1,5 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
+import morgan from "morgan";
+
 import { unauthorizedErrorHandler } from "./auth/error";
 import { verifyToken } from "./auth/verifyToken";
 
@@ -11,6 +13,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
 // routes
 app.get("/", helloController.getHello);
