@@ -8,14 +8,16 @@ export const verifyToken = (
   res: Response,
   next: NextFunction,
 ) => {
-  const bearer = req.headers["authorization"];
-  const token = parseToken(bearer);
-  if (!token) {
-    return res
-      .status(403)
-      .send({ auth: false, message: "No auth token provided." });
-  }
   try {
+    const bearer = req.headers["authorization"];
+    if (!checkBearer(bearer))
+      throw new Error("Format-> Authorization: Bearer [token]");
+    const token = parseToken(bearer);
+    if (!token) {
+      return res
+        .status(403)
+        .send({ auth: false, message: "No auth token provided." });
+    }
     jwt.verify(token, jwtSecret);
     next();
   } catch (error) {
@@ -26,6 +28,9 @@ export const verifyToken = (
   }
 };
 
+const checkBearer = (token: string): boolean => {
+  return token !== undefined && token.startsWith("Bearer ");
+};
 const parseToken = (token: string): string => {
   return token.slice(7, token.length).trimLeft();
 };
