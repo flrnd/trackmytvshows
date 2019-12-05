@@ -15,7 +15,7 @@ export const postLogin = async (
   await check("email", "Email is not valid")
     .isEmail()
     .run(req);
-  await check("password", "Password cannot be blank")
+  await check("password", "Password cannot be blank or less than 8 characters")
     .isLength({ min: 8 })
     .run(req);
   await sanitize("email")
