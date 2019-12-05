@@ -16,11 +16,11 @@ export const postShow = (req: Request, res: Response) => {
   newShow
     .save()
     .then(response => {
-      console.log(`New show added: ${response}`);
+      //console.log(`New show added: ${response}`);
       res.status(200).send({ message: response });
     })
     .catch(error => {
-      console.error(error.message);
+      //console.error(error.message);
       res.status(500).send({ error: error.message });
     });
 };
