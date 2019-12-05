@@ -32,18 +32,18 @@ describe("GET /api/", () => {
 });
 
 describe("POST /api/signup", () => {
-  it("should return 500 wrong email and blank password", done => {
+  it("should return 403 Forbiden: wrong email and password", done => {
     return request(app)
       .post("/api/signup")
       .send({ email: "Jhon", password: "" })
-      .expect(500, done);
+      .expect(403, done);
   });
 
-  it("should return 500 password < 8", done => {
+  it("should return 403 Forbiden: password < 8", done => {
     return request(app)
       .post("/api/signup")
       .send({ email: "Jhon@email.com", password: "123456" })
-      .expect(500, done);
+      .expect(403, done);
   });
 
   it("should return 200", done => {
@@ -52,27 +52,27 @@ describe("POST /api/signup", () => {
       .send({ email: "Jhon@email.com", password: "123456677" })
       .expect(200, done);
   });
-  it("should return 500 email already signed", done => {
+  it("should return 403 Forbiden: email already signed", done => {
     return request(app)
       .post("/api/signup")
       .send({ email: "Jhon@email.com", password: "123231311" })
-      .expect(500, done);
+      .expect(403, done);
   });
 });
 
 describe("POST /api/login", () => {
-  it("should return 500 wrong email & password", done => {
+  it("should return 401 Unathorized: wrong email & password", done => {
     return request(app)
       .post("/api/login")
       .send({ email: "Jhon", password: "" })
-      .expect(500, done);
+      .expect(401, done);
   });
 
-  it("should return 500 wrong password < 8", done => {
+  it("should return 401 Unathorized: wrong password < 8", done => {
     return request(app)
       .post("/api/login")
       .send({ email: "Jhon@email.com", password: "123456" })
-      .expect(500, done);
+      .expect(401, done);
   });
 
   it("should return 401 Unathorized", done => {
