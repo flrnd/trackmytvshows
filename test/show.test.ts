@@ -10,7 +10,7 @@ const showData = {
 
 describe("Show model test", () => {
   beforeAll(async () => {
-    const databaseURL = `mongodb://127.0.0.1/tvshow_testdb`;
+    const databaseURL = process.env.MONGO_URL;
     await mongoose.connect(databaseURL, {
       useNewUrlParser: true,
       useCreateIndex: true,
