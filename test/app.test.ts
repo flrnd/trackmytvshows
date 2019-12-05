@@ -31,7 +31,7 @@ describe("GET /api/", () => {
   });
 });
 
-describe("POST /api/signup", () => {
+describe("POST /api/signup/", () => {
   it("should return 403 Forbiden: wrong email and password", done => {
     return request(app)
       .post("/api/signup")
@@ -60,7 +60,7 @@ describe("POST /api/signup", () => {
   });
 });
 
-describe("POST /api/login", () => {
+describe("POST /api/login/", () => {
   it("should return 401 Unathorized: wrong email & password", done => {
     return request(app)
       .post("/api/login")
@@ -97,34 +97,48 @@ describe("POST /api/login", () => {
   });
 });
 
-describe("POST /api/tvshow", () => {
+describe("POST /api/tvshow/", () => {
   it("should return 403 Forbiden", done => {
     return request(app)
-      .get("/api/tvshow/")
+      .get("/api/tvshow")
       .expect(403, done);
   });
 
-  it("should return 500 Show validation failed", done => {
+  it("should return 500 validation failed", done => {
     const token = process.env.ACCESS_TOKEN;
     return request(app)
-      .post("/api/tvshow/")
+      .post("/api/tvshow")
       .send({ notvalid: "something" })
       .set("Authorization", `Bearer ${token}`)
       .expect(500, done);
+  });
+
+  it("should return 200 when create a new show and return a json object", done => {
+    const token = process.env.ACCESS_TOKEN;
+    return request(app)
+      .post("/api/tvshow")
+      .send({ title: "A tv show", imdb: "http://someurl" })
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+      .end((err, res) => {
+        const result = JSON.parse(res.text);
+        expect(result.hasOwnProperty("tvshow")).toBe(true);
+        done();
+      });
   });
 });
 
 describe("GET /api/tvshow", () => {
   it("should return 403 Forbiden", () => {
     return request(app)
-      .get("/api/tvshow/")
+      .get("/api/tvshow")
       .expect(403);
   });
 
   it("should return 200", done => {
     const token = process.env.ACCESS_TOKEN;
     return request(app)
-      .get("/api/tvshow/")
+      .get("/api/tvshow")
       .set("Authorization", `Bearer ${token}`)
       .expect(200, done);
   });
