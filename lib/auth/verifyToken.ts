@@ -9,28 +9,31 @@ export const verifyToken = (
   next: NextFunction,
 ) => {
   try {
-    const bearer = req.headers["authorization"];
-    if (!checkBearer(bearer))
-      throw new Error("Format-> Authorization: Bearer [token]");
+    const bearer = getBearerFromHeader(req.headers["authorization"]);
     const token = parseToken(bearer);
-    if (!token) {
-      return res
-        .status(403)
-        .send({ auth: false, message: "No auth token provided." });
-    }
     jwt.verify(token, jwtSecret);
     next();
   } catch (error) {
-    console.error(`Error: Can't verify token: ${error.message}`);
+    //console.error(`Error: Can't verify token: ${error.message}`);
     return res
       .status(403)
       .send({ auth: false, error: `Can't verify token: ${error.message}` });
   }
 };
 
+const getBearerFromHeader = (bearer: string): string => {
+  if (!checkBearer(bearer)) {
+    throw new Error("Missing Bearer [token]");
+  }
+  return bearer;
+};
+
 const checkBearer = (token: string): boolean => {
   return token !== undefined && token.startsWith("Bearer ");
 };
-const parseToken = (token: string): string => {
-  return token.slice(7, token.length).trimLeft();
+
+const parseToken = (bearer: string): string => {
+  const token = bearer.slice(7, bearer.length).trimLeft();
+  if (!token) throw new Error("No authorization token provided.");
+  return token;
 };
