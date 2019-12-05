@@ -29,7 +29,7 @@ export const postLogin = async (
     res.status(200).send({ auth: true, token });
   } catch (error) {
     //console.error(error.message);
-    return res.status(401).send({ error: `Login failed. ${error}` });
+    return res.status(401).send({ error: `Login failed. ${error.message}` });
   }
 };
 
@@ -51,7 +51,7 @@ export const postSignup = async (
     const newUser = await user.save();
     res.status(200).send({ message: `Signed in with ${newUser.email}!` });
   } catch (error) {
-    return res.status(403).send({ error: `Signup failed. ${error}` });
+    return res.status(403).send({ error: `Signup failed. ${error.message}` });
   }
 };
 
@@ -68,7 +68,7 @@ const findUser = async (email: string) => {
   return user;
 };
 
-async function validateEmailPassword(req) {
+const validateEmailPassword = async (req: Request) => {
   await check("email", "Email is not valid")
     .isEmail()
     .run(req);
@@ -79,6 +79,6 @@ async function validateEmailPassword(req) {
     .normalizeEmail({ gmail_remove_dots: false })
     .run(req);
   const errors = validationResult(req);
-  if (!errors.isEmpty()) throw new Error(`Validation Error: ${errors.array()}`);
+  if (!errors.isEmpty()) throw new Error("Wrong email or password");
   return errors;
-}
+};
