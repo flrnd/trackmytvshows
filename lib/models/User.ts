@@ -4,13 +4,7 @@ import mongoose from "mongoose";
 export type UserDocument = mongoose.Document & {
   email: string;
   password: string;
-  comparePassword: comparePasswordFunction;
 };
-
-type comparePasswordFunction = (
-  candidatePassword: string,
-  cb: (err: any, isMatch: any) => any,
-) => void;
 
 export interface AuthToken {
   accessToken: string;
@@ -43,17 +37,5 @@ userSchema.pre("save", function save(next) {
     });
   });
 });
-
-const comparePassword: comparePasswordFunction = (candidatePassword, cb) => {
-  bcrypt.compare(
-    candidatePassword,
-    this.password,
-    (err: mongoose.Error, isMatch: boolean) => {
-      cb(err, isMatch);
-    },
-  );
-};
-
-userSchema.methods.comparePassword = comparePassword;
 
 export const User = mongoose.model<UserDocument>("User", userSchema);
