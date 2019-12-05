@@ -128,7 +128,7 @@ describe("POST /api/tvshow/", () => {
   });
 });
 
-describe("GET /api/tvshow", () => {
+describe("GET /api/tvshow/", () => {
   it("should return 403 Forbiden", () => {
     return request(app)
       .get("/api/tvshow")
