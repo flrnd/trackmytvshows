@@ -13,7 +13,6 @@ export const getAllShows = (req: Request, res: Response) => {
 
 export const postShow = (req: Request, res: Response) => {
   const newShow = parseShow(req.body);
-
   newShow
     .save()
     .then(response => {
