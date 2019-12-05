@@ -1,20 +1,17 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-const ValidationError = mongoose.Error.ValidationError;
-const ValidatorError = mongoose.Error.ValidatorError;
-
 export type ShowDocument = Document & {
   title: string;
-  imdb: string;
-  air: Date;
+  url: string;
+  air: string;
   genre: string;
 };
 
 const ShowSchema: Schema = new Schema(
   {
     title: { type: String, unique: true, required: true },
-    imdb: { type: String, required: true },
-    air: Date,
+    url: String,
+    air: String,
     genre: String,
   },
   { timestamps: true },
