@@ -7,29 +7,11 @@ dotenv.config();
 
 beforeAll(async () => {
   const databaseURL = process.env.MONGO_URL;
-  const testUser = {
-    email: "testUser@gmail.com",
-    password: "A very secure password",
-  };
-
   await mongoose.connect(databaseURL, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
   });
-  request(app)
-    .post("/api/signup/")
-    .send({ email: testUser.email, password: testUser.password })
-    .end(req => {
-      console.log(`Signup: ${req}`);
-    });
-
-  request(app)
-    .post("/api/login")
-    .send({ email: testUser.email, password: testUser.password })
-    .then(res => {
-      console.log(res.text);
-    });
 });
 
 afterAll(async () => {
