@@ -6,7 +6,7 @@ import { User, UserDocument } from "../lib/models/User";
 
 dotenv.config();
 let testUser: UserDocument;
-
+let token: string;
 const testUserData = {
   email: "test@email.com",
   password: "A very secure password",
@@ -22,6 +22,15 @@ beforeAll(async () => {
 
   testUser = new User(testUserData);
   testUser.save().then(res => console.info(`Test user created.`));
+  setTimeout(() => {
+    request(app)
+      .post("/api/login")
+      .send(testUserData)
+      .end((_err, res) => {
+        const result = JSON.parse(res.text);
+        token = result.token;
+      });
+  }, 100);
 });
 
 afterAll(async () => {
@@ -103,7 +112,6 @@ describe("POST /api/login/", () => {
       .expect(200)
       .end((_err, res) => {
         const result = JSON.parse(res.text);
-        console.info(result);
         expect(result.hasOwnProperty("auth")).toBe(true);
         expect(result.auth).toBe(true);
         expect(result.hasOwnProperty("token")).toBe(true);
@@ -113,16 +121,6 @@ describe("POST /api/login/", () => {
 });
 
 describe("POST /api/tvshow/", () => {
-  let token: string;
-  beforeEach(() => {
-    request(app)
-      .post("/api/login")
-      .send(testUser)
-      .end((_err, res) => {
-        console.log("DEBUG POST: " + res.text);
-      });
-  });
-
   it("should return 403 Forbiden", done => {
     return request(app)
       .get("/api/tvshow")
@@ -130,20 +128,18 @@ describe("POST /api/tvshow/", () => {
   });
 
   it("should return 500 validation failed", done => {
-    //const token = process.env.ACCESS_TOKEN;
     return request(app)
       .post("/api/tvshow")
       .send({ notvalid: "something" })
-      .set("Authorization", `Bearer 12345`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(500, done);
   });
 
   it("should return 200 when create a new show and return a json object", done => {
-    //const token = process.env.ACCESS_TOKEN;
     return request(app)
       .post("/api/tvshow")
       .send({ title: "A tv show", imdb: "http://someurl" })
-      .set("Authorization", `Bearer 12345`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(200)
       .end((err, res) => {
         const result = JSON.parse(res.text);
@@ -154,16 +150,6 @@ describe("POST /api/tvshow/", () => {
 });
 
 describe("GET /api/tvshow/", () => {
-  let token: string;
-  beforeEach(() => {
-    request(app)
-      .post("/api/login")
-      .send(testUser)
-      .end((_err, res) => {
-        console.log("DEBUG GET: " + res.text);
-      });
-  });
-
   it("should return 403 Forbiden", () => {
     return request(app)
       .get("/api/tvshow")
@@ -171,10 +157,9 @@ describe("GET /api/tvshow/", () => {
   });
 
   it("should return 200", done => {
-    //const token = process.env.ACCESS_TOKEN;
     return request(app)
       .get("/api/tvshow")
-      .set("Authorization", `Bearer 12345`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(200, done);
   });
 });
