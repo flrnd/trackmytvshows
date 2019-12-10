@@ -1,12 +1,15 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
 import { User } from "../lib/models/User";
 import * as dummyData from "./dummyData/users";
 import { MongoError } from "mongodb";
 
+dotenv.config();
+
 describe("User model tests", () => {
   beforeAll(async () => {
-    const databaseURL = process.env.MONGO_URL;
+    const databaseURL = process.env.USERMODEL_TESTDB_URL;
     await mongoose.connect(databaseURL, {
       useNewUrlParser: true,
       useCreateIndex: true,

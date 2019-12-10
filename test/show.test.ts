@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import { Show, ShowDocument } from "../lib/models/Show";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const showData = {
   title: "Some tv show tittle",
@@ -10,7 +13,7 @@ const showData = {
 
 describe("Show model test", () => {
   beforeAll(async () => {
-    const databaseURL = process.env.MONGO_URL;
+    const databaseURL = process.env.SHOWMODEL_TESTDB_URL;
     await mongoose.connect(databaseURL, {
       useNewUrlParser: true,
       useCreateIndex: true,
