@@ -109,9 +109,9 @@ describe("POST /api/login/", () => {
     return request(app)
       .post("/api/login")
       .send(testUserData)
-      .expect(200)
       .end((_err, res) => {
         const result = JSON.parse(res.text);
+        expect(res.status).toBe(200);
         expect(result.hasOwnProperty("auth")).toBe(true);
         expect(result.auth).toBe(true);
         expect(result.hasOwnProperty("token")).toBe(true);
