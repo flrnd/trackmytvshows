@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import shortid from "shortid";
+
 import { Show, ShowDocument } from "../lib/models/Show";
 import dotenv from "dotenv";
 
@@ -31,6 +33,7 @@ describe("Show model test", () => {
     const savedShow = await validShow.save();
 
     expect(savedShow._id).toBeDefined();
+    expect(shortid.isValid(savedShow._id)).toBe(true);
     expect(savedShow.title).toBe(showData.title);
     expect(savedShow.url).toBe(showData.url);
     expect(savedShow.air).toBe(showData.air);
