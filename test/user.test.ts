@@ -36,55 +36,67 @@ describe("User model tests", () => {
 
   it("should fail with blank fields", async () => {
     const blankUser = new User(dummyData.blankUser);
+    let capturedError: Error;
     try {
       await blankUser.save();
     } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
+      capturedError = error;
     }
+      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
   });
 
   it("should fail with blank email", async () => {
     const blankEmail = new User(dummyData.blankEmail);
+    let capturedError: Error;
     try {
       await blankEmail.save();
     } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
+      capturedError = error;
     }
+      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
   });
 
   it("should fail with blank password", async () => {
     const blankPassword = new User(dummyData.blankPassword);
+    let capturedError: Error;
     try {
       await blankPassword.save();
     } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
+      capturedError = error;
     }
+      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
   });
 
   it("should fail with wrong email", async () => {
     const wrongEmail = new User(dummyData.wrongEmail);
+    let capturedError: Error;
     try {
       await wrongEmail.save();
     } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
+      capturedError = error;
     }
+      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
   });
 
   it("should fail with short password", async () => {
     const shortPassword = new User(dummyData.shortPassword);
+    let capturedError: Error;
     try {
       await shortPassword.save();
     } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
+      capturedError = error;
     }
+      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
   });
 
   it("should fail when try to save the same user", async () => {
     const existingUser = new User(dummyData.user);
+    let capturedError: Error;
     try {
       await existingUser.save();
     } catch (error) {
-      expect(error).toBeInstanceOf(MongoError);
+      capturedError = error;
     }
+      expect(capturedError).toBeInstanceOf(MongoError);
   });
 });

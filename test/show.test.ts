@@ -41,6 +41,7 @@ describe("Show model test", () => {
   });
 
   it("Should fail when creating a show without title", async () => {
+    let capturedError: Error;
     const showWithoutTitleField = new Show({
       title: "",
       imdb: "https://some/fake/url",
@@ -48,8 +49,9 @@ describe("Show model test", () => {
     try {
       await showWithoutTitleField.save();
     } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
+    capturedError = error;
     }
+      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
   });
 
   it("Should return a show with only a title", async () => {
@@ -58,11 +60,13 @@ describe("Show model test", () => {
       imdb: "",
     });
     let savedShowWithOnlyTitle: ShowDocument;
+    let capturedError: Error;
     try {
       savedShowWithOnlyTitle = await showWithOnlyTitle.save();
     } catch (error) {
-      console.error(error);
+      capturedError = error;
     }
+    expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(savedShowWithOnlyTitle._id).toBeDefined();
   });
 });
