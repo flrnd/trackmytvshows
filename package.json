@@ -37,6 +37,7 @@
     "mongoose": "^5.7.12",
     "morgan": "^1.9.1",
     "nodemon": "^2.0.1",
+    "shortid": "^2.2.15",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -51,6 +52,7 @@
     "@types/mongoose": "^5.5.32",
     "@types/morgan": "^1.7.37",
     "@types/node": "^12.12.14",
+    "@types/shortid": "0.0.29",
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",

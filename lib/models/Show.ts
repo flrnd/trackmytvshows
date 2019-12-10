@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import shortid from "shortid";
 
 export type ShowDocument = Document & {
   title: string;
@@ -9,6 +10,7 @@ export type ShowDocument = Document & {
 
 const ShowSchema: Schema = new Schema(
   {
+    _id: { type: String, default: shortid.generate },
     title: { type: String, unique: true, required: true },
     url: String,
     air: String,

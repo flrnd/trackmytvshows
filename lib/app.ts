@@ -22,6 +22,7 @@ app.post("/api/signup/", userController.postSignup);
 app.post("/api/login/", userController.postLogin);
 app.get("/api/tvshow/", verifyToken, tvshowController.getAllShows);
 app.post("/api/tvshow/", verifyToken, tvshowController.postShow);
+app.get("/api/tvshow/:showID", verifyToken, tvshowController.getShow);
 
 app.use(unauthorizedErrorHandler);
 
