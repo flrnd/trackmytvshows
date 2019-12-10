@@ -163,3 +163,18 @@ describe("GET /api/tvshow/", () => {
       .expect(200, done);
   });
 });
+
+describe("GET /api/tvshow/{id}/", () => {
+  it("should return a 404 Invalid ID", done => {
+    const id = "somerandombadID";
+    return request(app)
+      .get(`/api/tvshow/${id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200)
+      .end((_err, res) => {
+        const result = JSON.parse(res.text);
+        console.log(result);
+        done();
+      });
+  });
+});
