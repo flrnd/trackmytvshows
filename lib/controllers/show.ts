@@ -4,13 +4,13 @@ import shortid from "shortid";
 
 export const getShow = (req: Request, res: Response) => {
   const showID = req.params.showID;
-  if (shortid.isValid(showID)) {
-    Show.findById(req.params.showID)
-      .then(show => res.status(200).send({ tvshow: show }))
-      .catch(error => res.status(500).send({ error: error }));
-  } else {
-    return res.status(404).send({ error: "Invalid ID." });
-  }
+  Show.findById(showID)
+    .then(show =>
+      show
+        ? res.status(200).send({ tvshow: show })
+        : res.status(404).send({ tvshow: "Not found." }),
+    )
+    .catch(error => res.status(500).send({ error: error }));
 };
 
 export const getAllShows = (req: Request, res: Response) => {

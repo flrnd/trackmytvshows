@@ -140,8 +140,8 @@ describe("POST /api/tvshow/", () => {
       .post("/api/tvshow")
       .send({ title: "A tv show", imdb: "http://someurl" })
       .set("Authorization", `Bearer ${token}`)
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).toBe(200);
         const result = JSON.parse(res.text);
         expect(result.hasOwnProperty("tvshow")).toBe(true);
         done();
@@ -165,15 +165,13 @@ describe("GET /api/tvshow/", () => {
 });
 
 describe("GET /api/tvshow/{id}/", () => {
-  it("should return a 404 Invalid ID", done => {
+  it("should return a 404 Not found.", done => {
     const id = "somerandombadID";
     return request(app)
       .get(`/api/tvshow/${id}`)
       .set("Authorization", `Bearer ${token}`)
-      .expect(200)
-      .end((_err, res) => {
-        const result = JSON.parse(res.text);
-        console.log(result);
+      .end((err, res) => {
+        expect(res.status).toBe(404);
         done();
       });
   });
