@@ -46,12 +46,9 @@ describe("Show model test", () => {
       title: "",
       imdb: "https://some/fake/url",
     });
-    try {
-      await showWithoutTitleField.save();
-    } catch (error) {
-    capturedError = error;
-    }
-      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
+    await expect(showWithoutTitleField.save()).rejects.toBeInstanceOf(
+      mongoose.Error.ValidationError,
+    );
   });
 
   it("Should return a show with only a title", async () => {
@@ -65,8 +62,9 @@ describe("Show model test", () => {
       savedShowWithOnlyTitle = await showWithOnlyTitle.save();
     } catch (error) {
       capturedError = error;
+      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
     }
-    expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
     expect(savedShowWithOnlyTitle._id).toBeDefined();
+    expect(savedShowWithOnlyTitle.url).toEqual(undefined);
   });
 });
