@@ -1,8 +1,16 @@
 import { Request, Response } from "express";
 import { Show, ShowDocument } from "../models/Show";
+import shortid from "shortid";
 
 export const getShow = (req: Request, res: Response) => {
-  res.status(200).send({ message: "GET show success!" });
+  const showID = req.params.showID;
+  Show.findById(showID)
+    .then(show =>
+      show
+        ? res.status(200).send({ tvshow: show })
+        : res.status(404).send({ tvshow: "Not found." }),
+    )
+    .catch(error => res.status(500).send({ error: error }));
 };
 
 export const getAllShows = (req: Request, res: Response) => {

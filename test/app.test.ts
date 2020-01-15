@@ -109,9 +109,9 @@ describe("POST /api/login/", () => {
     return request(app)
       .post("/api/login")
       .send(testUserData)
-      .expect(200)
       .end((_err, res) => {
         const result = JSON.parse(res.text);
+        expect(res.status).toBe(200);
         expect(result.hasOwnProperty("auth")).toBe(true);
         expect(result.auth).toBe(true);
         expect(result.hasOwnProperty("token")).toBe(true);
@@ -140,8 +140,8 @@ describe("POST /api/tvshow/", () => {
       .post("/api/tvshow")
       .send({ title: "A tv show", imdb: "http://someurl" })
       .set("Authorization", `Bearer ${token}`)
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).toBe(200);
         const result = JSON.parse(res.text);
         expect(result.hasOwnProperty("tvshow")).toBe(true);
         done();
@@ -161,5 +161,18 @@ describe("GET /api/tvshow/", () => {
       .get("/api/tvshow")
       .set("Authorization", `Bearer ${token}`)
       .expect(200, done);
+  });
+});
+
+describe("GET /api/tvshow/{id}/", () => {
+  it("should return a 404 Not found.", done => {
+    const id = "somerandombadID";
+    return request(app)
+      .get(`/api/tvshow/${id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res.status).toBe(404);
+        done();
+      });
   });
 });

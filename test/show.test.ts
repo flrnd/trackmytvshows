@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import shortid from "shortid";
+
 import { Show, ShowDocument } from "../lib/models/Show";
 import dotenv from "dotenv";
 
@@ -31,6 +33,7 @@ describe("Show model test", () => {
     const savedShow = await validShow.save();
 
     expect(savedShow._id).toBeDefined();
+    expect(shortid.isValid(savedShow._id)).toBe(true);
     expect(savedShow.title).toBe(showData.title);
     expect(savedShow.url).toBe(showData.url);
     expect(savedShow.air).toBe(showData.air);
@@ -38,15 +41,14 @@ describe("Show model test", () => {
   });
 
   it("Should fail when creating a show without title", async () => {
+    let capturedError: Error;
     const showWithoutTitleField = new Show({
       title: "",
       imdb: "https://some/fake/url",
     });
-    try {
-      await showWithoutTitleField.save();
-    } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-    }
+    await expect(showWithoutTitleField.save()).rejects.toBeInstanceOf(
+      mongoose.Error.ValidationError,
+    );
   });
 
   it("Should return a show with only a title", async () => {
@@ -55,11 +57,14 @@ describe("Show model test", () => {
       imdb: "",
     });
     let savedShowWithOnlyTitle: ShowDocument;
+    let capturedError: Error;
     try {
       savedShowWithOnlyTitle = await showWithOnlyTitle.save();
     } catch (error) {
-      console.error(error);
+      capturedError = error;
+      expect(capturedError).toBeInstanceOf(mongoose.Error.ValidationError);
     }
     expect(savedShowWithOnlyTitle._id).toBeDefined();
+    expect(savedShowWithOnlyTitle.url).toEqual(undefined);
   });
 });

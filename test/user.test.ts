@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { User } from "../lib/models/User";
@@ -34,57 +34,33 @@ describe("User model tests", () => {
     expect(await compare(password, savedPassword)).toBe(true);
   });
 
-  it("should fail with blank fields", async () => {
+  it("should fail with blank fields", () => {
     const blankUser = new User(dummyData.blankUser);
-    try {
-      await blankUser.save();
-    } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-    }
+    expect(blankUser.save()).rejects.toBeInstanceOf(mongoose.Error);
   });
 
-  it("should fail with blank email", async () => {
+  it("should fail with blank email", () => {
     const blankEmail = new User(dummyData.blankEmail);
-    try {
-      await blankEmail.save();
-    } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-    }
+    expect(blankEmail.save()).rejects.toBeInstanceOf(mongoose.Error);
   });
 
-  it("should fail with blank password", async () => {
+  it("should fail with blank password", () => {
     const blankPassword = new User(dummyData.blankPassword);
-    try {
-      await blankPassword.save();
-    } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-    }
+    expect(blankPassword.save()).rejects.toBeInstanceOf(mongoose.Error);
   });
 
-  it("should fail with wrong email", async () => {
+  it("should fail with wrong email", () => {
     const wrongEmail = new User(dummyData.wrongEmail);
-    try {
-      await wrongEmail.save();
-    } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-    }
+    expect(wrongEmail.save()).rejects.toBeInstanceOf(mongoose.Error);
   });
 
-  it("should fail with short password", async () => {
+  it("should fail with short password", () => {
     const shortPassword = new User(dummyData.shortPassword);
-    try {
-      await shortPassword.save();
-    } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
-    }
+    expect(shortPassword.save()).rejects.toBeInstanceOf(mongoose.Error);
   });
 
-  it("should fail when try to save the same user", async () => {
+  it("should fail when try to save the same user", () => {
     const existingUser = new User(dummyData.user);
-    try {
-      await existingUser.save();
-    } catch (error) {
-      expect(error).toBeInstanceOf(MongoError);
-    }
+    expect(existingUser.save()).rejects.toBeInstanceOf(MongoError);
   });
 });
