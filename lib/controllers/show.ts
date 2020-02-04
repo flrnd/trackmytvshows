@@ -38,6 +38,18 @@ export const putShow = (req: Request, res: Response) => {
     .catch(error => res.status(500).send({ error: error.message }));
 };
 
+export const deleteShow = async (req: Request, res: Response) => {
+  const showID = req.params.showID;
+
+  try {
+    await Show.findByIdAndDelete(showID);
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+    return;
+  }
+};
+
 const updateShow = (current: ShowDocument, updatedShow: any): ShowDocument => {
   [current.title, current.genre, current.air, current.url] = updatedShow;
 
