@@ -1,15 +1,10 @@
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import { Show, ShowDocument } from "../models/Show";
-import shortid from "shortid";
 
 export const getShow = (req: Request, res: Response) => {
   const showID = req.params.showID;
   Show.findById(showID)
-    .then(show =>
-      show
-        ? res.status(200).send({ tvshow: show })
-        : res.status(404).send({ tvshow: "Not found." }),
-    )
+    .then(show => res.status(200).send({ tvshow: show }))
     .catch(error => res.status(500).send({ error: error }));
 };
 
@@ -24,19 +19,47 @@ export const postShow = (req: Request, res: Response) => {
   newShow
     .save()
     .then(response => {
-      //console.log(`New show added: ${response}`);
       res.status(200).send({ tvshow: response });
     })
     .catch(error => {
-      //console.error(error.message);
       res.status(500).send({ error: error.message });
     });
+};
+
+export const putShow = (req: Request, res: Response) => {
+  const showID = req.params.showID;
+
+  Show.findById(showID)
+    .then(show => {
+      show = updateShow(show, req.body);
+      show.save();
+    })
+    .then(response => res.status(200).send({ tvshow: response }))
+    .catch(error => res.status(500).send({ error: error.message }));
+};
+
+export const deleteShow = async (req: Request, res: Response) => {
+  const showID = req.params.showID;
+
+  try {
+    await Show.findByIdAndDelete(showID);
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+    return;
+  }
+};
+
+const updateShow = (current: ShowDocument, updatedShow: any): ShowDocument => {
+  [current.title, current.genre, current.air, current.url] = updatedShow;
+
+  return current;
 };
 
 const parseShow = (body: any): ShowDocument =>
   new Show({
     title: body.title,
-    imdb: body.imdb,
+    url: body.url,
     air: body.air,
     genre: body.genre,
   });

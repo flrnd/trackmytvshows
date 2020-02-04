@@ -18,11 +18,17 @@ app.use(morgan("dev"));
 // routes
 app.get("/", helloController.getHello);
 app.post("/", helloController.putHello);
+
+// Signup and login
 app.post("/api/signup/", userController.postSignup);
 app.post("/api/login/", userController.postLogin);
+
+// tvshows
 app.get("/api/tvshow/", verifyToken, tvshowController.getAllShows);
 app.post("/api/tvshow/", verifyToken, tvshowController.postShow);
 app.get("/api/tvshow/:showID", verifyToken, tvshowController.getShow);
+app.put("/api/tvshow/:showID", verifyToken, tvshowController.putShow);
+app.delete("/api/tvshow/:showID", verifyToken, tvshowController.deleteShow);
 
 app.use(unauthorizedErrorHandler);
 
