@@ -28,23 +28,20 @@ export const postShow = (req: Request, res: Response) => {
 
 export const putShow = (req: Request, res: Response) => {
   const showID = req.params.showID;
-  const updatedShow = {
-    title: req.body.title,
-    url: req.body.url,
-    genre: req.body.genre,
-    air: req.body.air,
-  };
 
   Show.findById(showID)
     .then(show => {
-      show.title = updatedShow.title;
-      show.air = updatedShow.air;
-      show.url = updatedShow.url;
-      show.genre = updatedShow.genre;
+      show = updateShow(show, req.body);
       show.save();
     })
     .then(response => res.status(200).send({ tvshow: response }))
     .catch(error => res.status(500).send({ error: error.message }));
+};
+
+const updateShow = (current: ShowDocument, updatedShow: any): ShowDocument => {
+  [current.title, current.genre, current.air, current.url] = updatedShow;
+
+  return current;
 };
 
 const parseShow = (body: any): ShowDocument =>
