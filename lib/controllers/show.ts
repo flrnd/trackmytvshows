@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Show, ShowDocument } from "../models/Show";
-import shortid from "shortid";
 
 export const getShow = (req: Request, res: Response) => {
   const showID = req.params.showID;
@@ -24,11 +23,9 @@ export const postShow = (req: Request, res: Response) => {
   newShow
     .save()
     .then(response => {
-      //console.log(`New show added: ${response}`);
       res.status(200).send({ tvshow: response });
     })
     .catch(error => {
-      //console.error(error.message);
       res.status(500).send({ error: error.message });
     });
 };
@@ -36,7 +33,7 @@ export const postShow = (req: Request, res: Response) => {
 const parseShow = (body: any): ShowDocument =>
   new Show({
     title: body.title,
-    imdb: body.imdb,
+    url: body.url,
     air: body.air,
     genre: body.genre,
   });
