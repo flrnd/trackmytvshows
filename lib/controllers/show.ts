@@ -1,4 +1,4 @@
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
 import { Show, ShowDocument } from "../models/Show";
 
 export const getShow = (req: Request, res: Response) => {
