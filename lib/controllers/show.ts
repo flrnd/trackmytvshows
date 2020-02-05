@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Show, ShowDocument } from "../models/Show";
+import logger from "../config/winston";
 
 export const getShow = async (req: Request, res: Response) => {
   try {
@@ -7,7 +8,8 @@ export const getShow = async (req: Request, res: Response) => {
     const show = await Show.findById(showID);
     res.status(200).send({ tvshow: show });
   } catch (error) {
-    res.status(500).send({ error: error });
+    logger.info(error);
+    res.status(404).send({ error: "Not found" });
   }
 };
 
@@ -34,8 +36,8 @@ export const putShow = async (req: Request, res: Response) => {
   try {
     const showID = req.params.showID;
     const currentShow = await Show.findById(showID);
-    const updatedShow = await updateShow(currentShow, req.body);
-    const response = await updateShow.save();
+    const updatedShow = updateShow(currentShow, req.body);
+    const response = await updatedShow.save();
     res.status(200).send({ tvshow: response });
   } catch (error) {
     res.status(500).send({ error: error.message });
