@@ -6,7 +6,7 @@ export const getHello = (req: Request, res: Response) => {
   });
 };
 
-export const putHello = (req: Request, res: Response) => {
+export const postHello = (req: Request, res: Response) => {
   req.body.name
     ? res.status(200).json({ message: `Hello ${req.body.name}!` })
     : res.status(200).json({ message: "Hello stranger!" });
