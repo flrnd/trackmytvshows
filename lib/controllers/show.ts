@@ -1,41 +1,45 @@
 import { Request, Response } from "express";
 import { Show, ShowDocument } from "../models/Show";
 
-export const getShow = (req: Request, res: Response) => {
-  const showID = req.params.showID;
-  Show.findById(showID)
-    .then(show => res.status(200).send({ tvshow: show }))
-    .catch(error => res.status(500).send({ error: error }));
+export const getShow = async (req: Request, res: Response) => {
+  try {
+    const showID = req.params.showID;
+    const show = await Show.findById(showID);
+    res.status(200).send({ tvshow: show });
+  } catch (error) {
+    res.status(500).send({ error: error });
+  }
 };
 
-export const getAllShows = (req: Request, res: Response) => {
-  Show.find({})
-    .then(shows => res.status(200).send({ tvshows: shows }))
-    .catch(error => res.status(500).send({ error: error.message }));
+export const getAllShows = async (req: Request, res: Response) => {
+  try {
+    const shows = await Show.find({});
+    res.status(200).send({ tvshows: shows });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 };
 
-export const postShow = (req: Request, res: Response) => {
-  const newShow = parseShow(req.body);
-  newShow
-    .save()
-    .then(response => {
-      res.status(200).send({ tvshow: response });
-    })
-    .catch(error => {
-      res.status(500).send({ error: error.message });
-    });
+export const postShow = async (req: Request, res: Response) => {
+  try {
+    const newShow = parseShow(req.body);
+    const savedShow = await newShow.save();
+    res.status(200).send({ tvshow: savedShow });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 };
 
-export const putShow = (req: Request, res: Response) => {
-  const showID = req.params.showID;
-
-  Show.findById(showID)
-    .then(show => {
-      show = updateShow(show, req.body);
-      show.save();
-    })
-    .then(response => res.status(200).send({ tvshow: response }))
-    .catch(error => res.status(500).send({ error: error.message }));
+export const putShow = async (req: Request, res: Response) => {
+  try {
+    const showID = req.params.showID;
+    const currentShow = await Show.findById(showID);
+    const updatedShow = await updateShow(currentShow, req.body);
+    const response = await updateShow.save();
+    res.status(200).send({ tvshow: response });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 };
 
 export const deleteShow = async (req: Request, res: Response) => {
