@@ -17,7 +17,7 @@ app.use(morgan("dev"));
 
 // routes
 app.get("/", helloController.getHello);
-app.post("/", helloController.putHello);
+app.post("/", helloController.postHello);
 
 // Signup and login
 app.post("/api/signup/", userController.postSignup);
